@@ -1,0 +1,62 @@
+blockquote {
+    width: 660px;
+    height: 440px;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+p#info {
+    position: fixed;
+    top: 500px;
+    width: 600px;
+    height: auto;
+}
+div {
+    width: 20px;
+    height: 20px;
+    margin: 0 1px;
+    background: #ccc;
+    display: inline-block;
+}
+
+.red {
+    background: #ff41ae;
+}
+.blue {
+    background: #6d3bff;
+}
+.orange {
+    background: #ff9e21;
+}
+.green {
+    background: #34bc24;
+}
+.black {
+    background: #000;
+}
+div.green1 {
+    background: rgba(66, 241, 48, 0.38);
+}
+div.yellow1 {
+    background: rgba(232, 241, 22, 0.38);
+}
+div.red1 {
+    background: rgba(255, 0, 19, 0.35);
+}
+ul.select {
+    position: fixed;
+    top: 10px;
+    left: 700px;
+    list-style: none;
+}
+ul.select > li {
+    margin-top: 5px;
+}
+ul.select p {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ccc;
+}
+ul.select p.selected {
+    border: 5px solid #34bc24;
+}

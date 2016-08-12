@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title></title>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="jq.js"></script>
+</head>
+<body>
+
+<p id="info"></p>
+<blockquote id="main"></blockquote>
+<ul class="select"></ul>
+
+<script src="additional.js"></script>
+<script src="v4.11_objects.js"></script>
+
+<script>
+
+    $(function()
+    {
+        window.printErr = function(){ console.log.apply(console, arguments);};
+        timer = new Timer();
+        var drawer = new Drawer();
+        b = new Board();
+        var playerColors = ['blue', 'red', 'orange', 'green'];
+        var selected = null;
+
+        b.positions[0] = new Position(b.map, 0);
+        b.positions[1] = new Position(b.map, 1);
+        b.activePlayers = 20;
+//        b.positions[2] = new Position(b.map, 2);
+
+        b.me = b.positions[0];
+        b.positions[0].set(5, 8);
+        b.positions[1].set(5, 11);
+        for( var i = 6; i < 22; i++) { b.positions[0].move(b.map.node(i, 8)); b.positions[1].move(b.map.node(i, 11)); }
+//        for( var i = 8; i < 12; i++) b.positions[0].move(b.map.node(3, i));
+//        for( var i = 4; i < 10; i++) b.positions[0].move(b.map.node(i, 11));
+//        for( var i = 10; i > 8; i--) b.positions[0].move(b.map.node(9, i));
+//        b.positions[0].move(b.map.node(10, 11));
+//        b.positions[0].move(b.map.node(10, 12));
+//        b.positions[0].move(b.map.node(9, 12));
+//        b.positions[0].move(b.map.node(9, 11));
+
+//        b.positions[1].move(b.map.node(7, 10));
+//        b.positions[1].move(b.map.node(8, 10));
+//        b.positions[2].set(1, 8);
+//        b.positions[2].move(b.map.node(8, 13));
+//        b.positions[2].move(b.map.node(7, 13));
+//        b.positions[2].move(b.map.node(6, 13));
+//        b.positions[2].move(b.map.node(6, 12));
+//        b.positions[2].move(b.map.node(6, 11));
+
+
+//        for(var i = 0; i < 29; i++ ){
+//            b.positions[0].moveToDirection(1);
+//            b.positions[1].moveToDirection(1);
+//        }
+
+        for( var i in b.positions )
+        {
+            drawer.drawNodes(b.positions[i].history(), playerColors[i]);
+            $('ul.select').append('<li><p class="' +playerColors[i]+ '" data-id="' + i + '"></p></li>');
+        }
+
+        $('ul.select p').on('click', function(e){
+            $('ul.select p').removeClass('selected');
+            selected = parseInt($(this).data('id'));
+            $(this).addClass('selected');
+        });
+
+        $(document).on('keydown', function(e)
+        {
+            if( ! ( 9 === e.keyCode || 32 === e.keyCode || ( e.keyCode > 36 && e.keyCode < 41 ) ) ) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            selected = selected || 0;
+
+            var p = b.positions[selected];
+            var next;
+
+            if( 37 === e.keyCode ) {
+                next = p.node().next(3);
+                next && p.move(next);
+            } else if( 38 === e.keyCode ) {
+                next = p.node().next(0);
+                next && p.move(next);
+            } else if( 39 === e.keyCode ) {
+                next = p.node().next(1);
+                next && p.move(next);
+            } else if( 40 === e.keyCode ) {
+                next = p.node().next(2);
+                next && p.move(next);
+            } else if( 32 === e.keyCode ) {
+                p.history().length > 1 && p.unmove();
+            } else if( 9 === e.keyCode ) {
+                selected = (selected || 0) + 1;
+                if( selected > 2 ) selected = 0;
+                $('ul.select p').eq(selected).trigger('click');
+            }
+
+            b.me.direction = null;
+            b.me.target = [];
+            timer.start('turn');
+            b.selectStrategy();
+
+            timer.stop('turn');
+            printErr(b.directions[b.me.direction]);
+
+            drawer.clear();
+            drawer.drawNodesMulti(b.currentEvaluation.owned(), ['green1', 'yellow1', 'red1']);
+            for( var i in b.positions ) drawer.drawNodes(b.positions[i].history(), playerColors[i]);
+        });
+//
+//        var i;
+//        i = setInterval(function(){
+//            voronoi.calculate(positions, positions[0]);
+//            var target = voronoi.target();
+//
+//            var direction = target ? strategy.attack()
+//            var direction = strategy.fill(positions[0]);
+//        });
+    });
+
+</script>
+</body>
+</html>
